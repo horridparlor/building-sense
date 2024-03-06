@@ -4,8 +4,8 @@ use system\Database;
 
 header('Content-Type: application/json');
 
-include("system/Database.php");
-include("system/constants.php");
+include("../system/Database.php");
+include("../system/constants.php");
 
 function getCards()
 {
@@ -18,7 +18,7 @@ function getCards()
         SELECT id, name, streetAddress, postNumber
         FROM building
         LIMIT :maxItems
-        OFFSETT :offset
+        OFFSET :offset
     SQL;
     $replacements = array(
         'maxItems' => ['value' => Utility::limitMaxItems($maxItems), 'type' => PDO::PARAM_INT],
