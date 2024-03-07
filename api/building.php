@@ -45,9 +45,9 @@ function postBuilding(Database $database) {
         VALUES (:name, :streetAddress, :postNumber)
     SQL;
     $replacements = array(
-        'name' => [$name, 'type' => PDO::PARAM_STR],
-        'streetAddress' => [$streetAddress, 'type' => PDO::PARAM_STR],
-        'postNumber' => [$postNumber, 'type' => PDO::PARAM_INT]
+        'name' => ['value' => $name, 'type' => PDO::PARAM_STR],
+        'streetAddress' => ['value' => $streetAddress, 'type' => PDO::PARAM_STR],
+        'postNumber' => ['value' => $postNumber, 'type' => PDO::PARAM_INT]
     );
     $result = $database->query($sql, $replacements);
     return json_encode(array(
