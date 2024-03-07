@@ -38,7 +38,7 @@ function postBuilding(Database $database) {
     $database->getPostParams();
     $name = $database->getStringParam("name");
     $streetAddress = $database->getStringParam("streetAddress");
-    $postNumber = $database->getStringParam("postNumber");
+    $postNumber = $database->getIntParam("postNumber");
 
     $sql = <<<SQL
         INSERT INTO building (name, streetAddress, postNumber)
