@@ -19,8 +19,8 @@ function getBuildings(Database $database)
         OFFSET :offset
     SQL;
     $replacements = array(
-        'maxItems' => ['value' => Utility::limitMaxItems($maxItems), 'type' => PDO::PARAM_INT],
-        'offset' => ['value' => $offset ?? 0, 'type' => PDO::PARAM_INT]
+        'maxItems' => Database::getIntReplacement(Utility::limitMaxItems($maxItems)),
+        'offset' => Database::getIntReplacement($offset ?? 0)
     );
     $result = $database->query($sql, $replacements);
     if (count($result) > 0) {
@@ -45,9 +45,9 @@ function postBuilding(Database $database) {
         VALUES (:name, :streetAddress, :postNumber)
     SQL;
     $replacements = array(
-        'name' => ['value' => $name, 'type' => PDO::PARAM_STR],
-        'streetAddress' => ['value' => $streetAddress, 'type' => PDO::PARAM_STR],
-        'postNumber' => ['value' => $postNumber, 'type' => PDO::PARAM_INT]
+        'name' => Database::getStringReplacement($name),
+        'streetAddress' => Database::getStringReplacement($streetAddress),
+        'postNumber' => Database::getIntReplacement($postNumber)
     );
     $result = $database->query($sql, $replacements);
     return json_encode(array(

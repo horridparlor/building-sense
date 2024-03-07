@@ -141,4 +141,16 @@ class Database
             default => $errorMessage,
         };
     }
+
+    private static function getReplacement(mixed $value, int $type): array {
+        return array('value' => $value, 'type' => $type);
+    }
+
+    public static function getIntReplacement(mixed $value): array {
+        return self::getReplacement($value, \PDO::PARAM_INT);
+    }
+
+    public static function getStringReplacement(mixed $value): array {
+        return self::getReplacement($value, \PDO::PARAM_STR);
+    }
 }
