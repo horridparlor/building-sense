@@ -31,7 +31,7 @@ function getBuildings(Database $database)
         ));
     } else {
         http_response_code(204);
-        return json_encode(array("status" => "No buildings"));
+        return null;
     }
 }
 function postBuilding(Database $database) {
