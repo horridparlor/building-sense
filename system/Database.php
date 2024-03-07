@@ -129,10 +129,10 @@ class Database
         }
     }
 
-    function handleRequest(?callable $getFunction = null, ?callable $postFunction = null, ?callable $putFunction = null, ?callable $deleteFunction = null): string {
+    function handleRequest(?callable $getFunction = null, ?callable $postFunction = null, ?callable $putFunction = null, ?callable $deleteFunction = null): void {
         $method = $_SERVER['REQUEST_METHOD'];
         $errorMessage = json_encode(["status" => "Error", "message" => "Unsupported request method"]);
-        return match ($method) {
+        echo match ($method) {
             'GET' => $this->execute($getFunction, $errorMessage),
             'POST' => $this->execute($postFunction, $errorMessage),
             'PUT' => $this->execute($putFunction, $errorMessage),
