@@ -30,7 +30,7 @@ function getBuildings(Database $database)
             "buildings" => $result
         ));
     } else {
-        http_response_code(202);
+        http_response_code(204);
         return json_encode(array("status" => "No buildings"));
     }
 }
