@@ -3,15 +3,23 @@
 namespace system;
 require_once 'loadEnv.php';
 
+enum RequestType: string {
+    case GET = 'GET';
+    case POST = 'POST';
+}
+const POST_REQUEST = 'POST';
+
 class Database
 {
     private $pdo;
+    private $params;
 
     public function __construct()
     {
         loadEnv();
         $this->connect();
         $this->allowCORS();
+        $this->getGetParams();
     }
 
     private function connect()
@@ -60,18 +68,33 @@ class Database
         return "(" . implode(", ", $ids) . ")";
     }
 
-    public static function getIntParam(string $id, mixed $default = null)
+    public function getIntParam(string $id, mixed $default = null)
     {
-        $value = $_GET[$id];
+        $value = $this->params[$id];
         if (is_null($value)) {
             return $default;
         }
         return intval($value);
     }
 
-    public static function getStringParam(string $id, mixed $default = null)
+    private static function getRequestParams(RequestType $requestType): array {
+        return match($requestType) {
+            RequestType::GET => $_GET,
+            RequestType::POST => $_POST,
+        };
+    }
+
+    public function getGetParams(): array {
+        return $this->params = self::getRequestParams(RequestType::GET);
+    }
+    public function getPostParams(): array {
+        return $this->params = self::getRequestParams(RequestType::POST);
+    }
+
+
+    public function getStringParam(string $id, mixed $default = null)
     {
-        $value = $_GET[$id];
+        $value = $this->params[$id];
         if (is_null($value)) {
             return $default;
         }
@@ -96,5 +119,25 @@ class Database
 
             exit(0);
         }
+    }
+
+    private function execute(?callable $function, string $errorMessage): string {
+        if (is_callable($function)) {
+            return $function($this);
+        } else {
+            return $errorMessage;
+        }
+    }
+
+    function handleRequest(?callable $getFunction = null, ?callable $postFunction = null, ?callable $putFunction = null, ?callable $deleteFunction = null): string {
+        $method = $_SERVER['REQUEST_METHOD'];
+        $errorMessage = json_encode(["status" => "Error", "message" => "Unsupported request method"]);
+        return match ($method) {
+            'GET' => $this->execute($getFunction, $errorMessage),
+            'POST' => $this->execute($postFunction, $errorMessage),
+            'PUT' => $this->execute($putFunction, $errorMessage),
+            'DELETE' => $this->execute($deleteFunction, $errorMessage),
+            default => $errorMessage,
+        };
     }
 }
