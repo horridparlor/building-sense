@@ -13,7 +13,6 @@ class Database
 {
     private $pdo;
     private $params;
-    private $paramsValueKey;
 
     public function __construct()
     {
@@ -72,7 +71,7 @@ class Database
 
     public function getIntParam(string $id, mixed $default = null)
     {
-        $value = $this->params[$id][$this->paramsValueKey];
+        $value = $this->params[$id];
         if (is_null($value)) {
             return $default;
         }
@@ -88,17 +87,15 @@ class Database
 
     public function getGetParams(): void {
         $this->params = self::getRequestParams(RequestType::GET);
-        $this->paramsValueKey = 'value';
     }
     public function getPostParams(): void {
         $this->params = self::getRequestParams(RequestType::POST);
-        $this->paramsValueKey = '0';
     }
 
 
     public function getStringParam(string $id, mixed $default = null)
     {
-        $value = $this->params[$id][$this->paramsValueKey];
+        $value = $this->params[$id];
         if (is_null($value)) {
             return $default;
         }
@@ -108,7 +105,6 @@ class Database
     public static function allowCORS(): void
     {
         if (isset($_SERVER['HTTP_ORIGIN'])) {
-            header('Content-Type: application/json');
             header("Access-Control-Allow-Origin: {$_SERVER['HTTP_ORIGIN']}");
             header('Access-Control-Allow-Credentials: true');
             header('Access-Control-Max-Age: 86400');
